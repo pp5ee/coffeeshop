@@ -1,0 +1,301 @@
+/* ============================================================
+   Pixel Coffee Shop — Global Styles
+   Pixel-art aesthetic: pixelated rendering, limited palette,
+   monospace / retro font stack.
+   ============================================================ */
+
+/* ---------- Colour Palette ---------- */
+:root {
+  --col-bg:       #1a0a00;   /* very dark brown – page background */
+  --col-surface:  #2d1b00;   /* dark brown – panels / overlays    */
+  --col-border:   #8b5e3c;   /* mid brown – borders               */
+  --col-accent:   #f5a623;   /* amber – primary highlights        */
+  --col-accent2:  #e04040;   /* red – warnings / errors           */
+  --col-green:    #5aad5a;   /* green – success / money           */
+  --col-text:     #f0d9b5;   /* cream – body text                 */
+  --col-text-dim: #8b7355;   /* muted brown – labels              */
+  --col-btn:      #5a3010;   /* button default bg                 */
+  --col-btn-hov:  #7a4820;   /* button hover bg                  */
+  --col-btn-sel:  #f5a623;   /* button selected bg                */
+  --col-btn-sel-t:#1a0a00;   /* button selected text              */
+  --col-canvas-bg:#3d2b1f;   /* canvas fallback bg                */
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- Base ---------- */
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--col-bg);
+  color: var(--col-text);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ---------- Utility: Visibility ---------- */
+.hidden  { display: none !important; }
+.active  { display: flex !important; }
+
+/* ---------- Full-Screen Overlay Screens ---------- */
+.screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 10, 0, 0.92);
+  display: none;            /* default hidden; .active → flex */
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.screen-box {
+  background: var(--col-surface);
+  border: 3px solid var(--col-border);
+  padding: 40px 48px;
+  max-width: 480px;
+  width: 90%;
+  text-align: center;
+  /* pixel-art "chunky" border */
+  box-shadow:
+    4px 4px 0 #000,
+    inset 2px 2px 0 var(--col-accent);
+}
+
+/* ---------- Typography ---------- */
+.title {
+  font-size: 2rem;
+  color: var(--col-accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  /* simulate pixel outline */
+  text-shadow:
+    2px 0  0 #000,
+   -2px 0  0 #000,
+    0  2px 0 #000,
+    0 -2px 0 #000;
+}
+
+.subtitle {
+  color: var(--col-text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+}
+
+.instructions {
+  list-style: none;
+  text-align: left;
+  margin: 0 auto 28px;
+  max-width: 300px;
+  font-size: 0.82rem;
+  color: var(--col-text);
+}
+
+.instructions li {
+  padding: 4px 0 4px 20px;
+  position: relative;
+}
+
+.instructions li::before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  color: var(--col-accent);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  border: 2px solid var(--col-border);
+  background: var(--col-btn);
+  color: var(--col-text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  /* pixel shadow */
+  box-shadow: 3px 3px 0 #000;
+  transition: background 0.05s, transform 0.05s, box-shadow 0.05s;
+  image-rendering: pixelated;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--col-btn-hov);
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000;
+}
+
+.btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--col-accent);
+  color: var(--col-bg);
+  border-color: var(--col-accent);
+  font-size: 1rem;
+  padding: 12px 36px;
+  margin-top: 8px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #ffc040;
+  border-color: #ffc040;
+}
+
+/* Choice buttons (cup/espresso/milk) */
+.btn-choice.selected,
+.btn-choice[aria-pressed="true"] {
+  background: var(--col-btn-sel);
+  color:      var(--col-btn-sel-t);
+  border-color: var(--col-btn-sel);
+}
+
+/* Serve button */
+.btn-serve {
+  width: 100%;
+  background: var(--col-green);
+  color: #fff;
+  border-color: #3d8c3d;
+  font-size: 1rem;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.btn-serve:hover:not(:disabled) {
+  background: #70cc70;
+}
+
+.btn-serve:disabled {
+  background: var(--col-btn);
+  color: var(--col-text-dim);
+  border-color: var(--col-border);
+}
+
+/* ---------- Game Wrapper ---------- */
+#game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding: 8px;
+  gap: 6px;
+}
+
+/* ---------- HUD Bar ---------- */
+#hud {
+  display: flex;
+  gap: 24px;
+  background: var(--col-surface);
+  border: 2px solid var(--col-border);
+  padding: 6px 20px;
+  font-size: 0.9rem;
+  color: var(--col-text);
+  box-shadow: 2px 2px 0 #000;
+}
+
+.hud-item {
+  white-space: nowrap;
+}
+
+#hud-money  { color: var(--col-green); }
+#hud-timer  { color: var(--col-accent); }
+#hud-served { color: var(--col-text); }
+
+/* ---------- Game Canvas ---------- */
+#game-canvas {
+  display: block;
+  /* Pixel-art: prevent blurring on scaled displays */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;   /* Firefox fallback */
+  background: var(--col-canvas-bg);
+  border: 3px solid var(--col-border);
+  box-shadow: 4px 4px 0 #000;
+  /* Scale to fit without going wider than viewport */
+  max-width: 100%;
+}
+
+/* ---------- Drink Preparation Panel ---------- */
+#drink-panel {
+  background: var(--col-surface);
+  border: 2px solid var(--col-border);
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: 2px 2px 0 #000;
+}
+
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 90px;
+}
+
+.panel-label {
+  font-size: 0.7rem;
+  color: var(--col-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Feedback Bar ---------- */
+#feedback-bar {
+  min-height: 24px;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+#feedback-msg {
+  color: var(--col-accent);
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 #000;
+  transition: opacity 0.3s;
+}
+
+#feedback-msg.success { color: var(--col-green); }
+#feedback-msg.error   { color: var(--col-accent2); }
+
+/* ---------- Summary Stats ---------- */
+.summary-stats {
+  margin: 20px 0 28px;
+  text-align: left;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--col-border);
+  font-size: 0.95rem;
+}
+
+.stat-label { color: var(--col-text-dim); }
+.stat-value { color: var(--col-accent); font-weight: bold; }
