@@ -28,13 +28,20 @@
   padding: 0;
 }
 
+/* ---------- Pixel Font ---------- */
+@font-face {
+  font-family: 'PixelFont';
+  src: local('Courier New'), local('Courier'), monospace;
+  font-size-adjust: 0.5;
+}
+
 /* ---------- Base ---------- */
 html, body {
   width: 100%;
   height: 100%;
   background: var(--col-bg);
   color: var(--col-text);
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'PixelFont', "Courier New", Courier, monospace;
   font-size: 14px;
   line-height: 1.4;
   overflow: hidden;

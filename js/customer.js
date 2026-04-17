@@ -5,6 +5,7 @@
  */
 
 import { CSTATE, QUEUE_SLOTS, WALK_SPEED, DRINK_RECIPES, SCENE } from './constants.js';
+import { assignQueueSlot } from './queue.js';
 
 // ── Customer Class ─────────────────────────────────────────────────────────────
 export class Customer {
@@ -34,7 +35,7 @@ export class Customer {
     this.failedRecorded = false;
   }
 
-  update(dt, patienceBase) {
+  update(dt, patienceBase, customers) {
     // Update walk animation
     if (this.isMoving()) {
       this.walkFrame += dt * 8;
@@ -43,7 +44,7 @@ export class Customer {
     // State-specific updates
     switch (this.state) {
       case CSTATE.ENTERING:
-        this.updateEntering(dt);
+        this.updateEntering(dt, customers);
         break;
       case CSTATE.QUEUED:
         this.updateQueued(dt, patienceBase);
@@ -60,14 +61,20 @@ export class Customer {
     }
   }
 
-  updateEntering(dt) {
-    // Move toward first queue slot or counter
-    const targetSlot = this.getQueueSlot(0);
-    this.moveToward(targetSlot.x, targetSlot.y, dt);
+  updateEntering(dt, customers) {
+    // Move toward assigned queue slot
+    if (this.queueIndex === -1) {
+      // Assign to next available queue slot
+      this.queueIndex = assignQueueSlot(this, customers);
+    }
 
-    if (this.hasReachedTarget()) {
-      this.state = CSTATE.AT_COUNTER;
-      this.queueIndex = 0;
+    if (this.queueIndex >= 0) {
+      const targetSlot = this.getQueueSlot(this.queueIndex);
+      this.moveToward(targetSlot.x, targetSlot.y, dt);
+
+      if (this.hasReachedTarget()) {
+        this.state = CSTATE.QUEUED;
+      }
     }
   }
 
@@ -157,11 +164,11 @@ export function updateCustomers(customers, dt, patienceBase) {
   customers.sort((a, b) => a.queueIndex - b.queueIndex);
 
   // Update each customer
-  customers.forEach(c => c.update(dt, patienceBase));
+  customers.forEach(c => c.update(dt, patienceBase, customers));
 
   // Advance queue: if front customer is gone, move everyone up
   const frontCustomer = customers.find(c => c.queueIndex === 0);
-  if (!frontCustomer || (frontCustomer.state !== CSTATE.AT_COUNTER && frontCustomer.state !== CSTATE.QUEUED)) {
+  if (frontCustomer && (frontCustomer.state === CSTATE.SERVED || frontCustomer.state === CSTATE.ANGRY || frontCustomer.state === CSTATE.GONE)) {
     // Remove customers that are no longer active
     const activeCustomers = customers.filter(c =>
       c.state === CSTATE.AT_COUNTER ||
