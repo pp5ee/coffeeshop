@@ -7,7 +7,7 @@
 import { gameState, recordServed, recordFailed } from './state.js';
 import { setCupSize, setShots, setMilk, resetDrink, tryServe } from './drink.js';
 import { getCustomerAtCounter } from './customer.js';
-import { SCREEN_PLAYING } from './state.js';
+import { SCREEN_PLAYING, SCREEN_SUMMARY } from './state.js';
 import { CSTATE } from './constants.js';
 
 // ── DOM Elements ───────────────────────────────────────────────────────────────
@@ -121,32 +121,39 @@ function clearDrinkSelection() {
 }
 
 // ── HUD Updates ────────────────────────────────────────────────────────────────
-export function updateUI(state) {
+
+/**
+ * Update the in-play HUD (money, timer, served counter).
+ * Only runs while the playing screen is active.
+ */
+function updateHUD(state) {
   if (state.screen !== SCREEN_PLAYING) return;
 
-  // Update money display
-  if (hudMoney) {
-    hudMoney.textContent = `$${state.money.toFixed(2)}`;
-  }
+  if (hudMoney) hudMoney.textContent = `$${state.money.toFixed(2)}`;
+  if (hudTimer) hudTimer.textContent = `${Math.ceil(state.dayTime)}`;
+  if (hudServed) hudServed.textContent = state.stats.served;
+}
 
-  // Update timer display
-  if (hudTimer) {
-    hudTimer.textContent = `${Math.ceil(state.dayTime)}`;
-  }
+/**
+ * Populate the end-of-day summary panel with final statistics.
+ * Only runs while the summary screen is active.
+ */
+function updateSummary(state) {
+  if (state.screen !== SCREEN_SUMMARY) return;
 
-  // Update served counter
-  if (hudServed) {
-    hudServed.textContent = state.stats.served;
-  }
-
-  // Update summary screen stats if visible
   const statServed = document.getElementById('stat-served');
   const statFailed = document.getElementById('stat-failed');
-  const statMoney = document.getElementById('stat-money');
+  const statMoney  = document.getElementById('stat-money');
 
   if (statServed) statServed.textContent = state.stats.served;
   if (statFailed) statFailed.textContent = state.stats.failed;
-  if (statMoney) statMoney.textContent = `$${state.money.toFixed(2)}`;
+  if (statMoney)  statMoney.textContent  = `$${state.money.toFixed(2)}`;
+}
+
+/** Master UI update — delegates to the correct sub-updater for the active screen. */
+export function updateUI(state) {
+  updateHUD(state);
+  updateSummary(state);
 }
 
 // ── Feedback System ────────────────────────────────────────────────────────────
