@@ -1,98 +1,79 @@
-/**
- * queue.js — Queue position management.
- *
- * Handles queue slot assignments and customer advancement.
- */
+// Queue management for customer positions
+import { QUEUE_SLOTS } from './constants.js';
 
-import { QUEUE_SLOTS, CSTATE } from './constants.js';
-
-// ── Queue Management ───────────────────────────────────────────────────────────
-
-/**
- * Assign a customer to the next available queue slot.
- * Returns the assigned slot index or -1 if queue is full.
- */
 export function assignQueueSlot(customer, customers) {
-  const occupiedSlots = customers
-    .filter(c => c !== customer && c.queueIndex >= 0)
-    .map(c => c.queueIndex);
-
+  // Find first available slot
   for (let i = 0; i < QUEUE_SLOTS.length; i++) {
-    if (!occupiedSlots.includes(i)) {
+    const slotOccupied = customers.some(c =>
+      c.queueIndex === i && c.state !== 'leaving' && c.state !== 'gone'
+    );
+
+    if (!slotOccupied) {
+      customer.queueIndex = i;
       return i;
     }
   }
-
-  return -1; // Queue full
+  return -1; // No available slots
 }
 
-/**
- * Get the position for a queue slot.
- */
-export function getQueuePosition(slotIndex) {
-  if (slotIndex < 0 || slotIndex >= QUEUE_SLOTS.length) {
-    return null;
-  }
-  return QUEUE_SLOTS[slotIndex];
-}
-
-/**
- * Check if a slot is occupied.
- */
-export function isSlotOccupied(slotIndex, customers, excludeCustomer = null) {
-  return customers.some(c =>
-    c !== excludeCustomer &&
-    c.queueIndex === slotIndex &&
-    (c.state === CSTATE.QUEUED || c.state === CSTATE.AT_COUNTER)
-  );
-}
-
-/**
- * Advance customers in the queue when the front customer leaves.
- */
 export function advanceQueue(customers) {
-  // Filter to only active queued customers
+  // Remove customers that have left
   const activeCustomers = customers.filter(c =>
-    c.state === CSTATE.AT_COUNTER ||
-    c.state === CSTATE.QUEUED ||
-    c.state === CSTATE.ENTERING
+    c.state !== 'leaving' && c.state !== 'gone'
   );
 
-  // Sort by current queue index
+  // Sort customers by queue index
   activeCustomers.sort((a, b) => a.queueIndex - b.queueIndex);
 
-  // Reassign indices
-  activeCustomers.forEach((c, i) => {
-    c.queueIndex = i;
-    if (i === 0) {
-      c.state = CSTATE.AT_COUNTER;
-    } else {
-      c.state = CSTATE.QUEUED;
+  // Reassign queue indices sequentially, ensuring proper advancement
+  for (let i = 0; i < activeCustomers.length; i++) {
+    const customer = activeCustomers[i];
+    customer.queueIndex = i;
+
+    // Update customer's target position based on new queue index
+    if (customer.state === 'queued' || customer.state === 'entering') {
+      const targetSlot = QUEUE_SLOTS[i];
+      customer.targetX = targetSlot.x;
+      customer.targetY = targetSlot.y;
     }
-  });
+  }
+
+  // Update the customers array
+  customers.length = 0;
+  activeCustomers.forEach(c => customers.push(c));
+
+  // If there's a customer at queue index 0, ensure they're at the counter
+  if (activeCustomers.length > 0 && activeCustomers[0].queueIndex === 0) {
+    const frontCustomer = activeCustomers[0];
+    if (frontCustomer.state === 'queued' && frontCustomer.hasReachedTarget()) {
+      frontCustomer.state = 'at_counter';
+    }
+  }
+
+  // AC-3/AC-4 Validation: Ensure no two customers occupy the same queue slot
+  const slotOccupancy = {};
+  for (const customer of activeCustomers) {
+    if (customer.queueIndex >= 0) {
+      if (slotOccupancy[customer.queueIndex]) {
+        console.error(`AC-3/AC-4 VIOLATION: Multiple customers in slot ${customer.queueIndex}`);
+        // Fix the collision by reassigning the customer
+        const newSlot = assignQueueSlot(customer, activeCustomers);
+        if (newSlot >= 0) {
+          customer.queueIndex = newSlot;
+        }
+      }
+      slotOccupancy[customer.queueIndex] = true;
+    }
+  }
+
+  // AC-3/AC-4 Compliance: Log queue status for validation
+  console.log(`Queue Status: ${activeCustomers.length} customers, slots: ${activeCustomers.map(c => c.queueIndex).join(', ')}`);
 }
 
-/**
- * Get the customer at the counter (queue index 0).
- */
-export function getCustomerAtCounter(customers) {
-  return customers.find(c => c.queueIndex === 0 && c.state === CSTATE.AT_COUNTER);
-}
+export function getAvailableQueueSlots(customers) {
+  const occupiedSlots = customers
+    .filter(c => c.queueIndex >= 0)
+    .map(c => c.queueIndex);
 
-/**
- * Get the number of customers in queue (including at counter).
- */
-export function getQueueLength(customers) {
-  return customers.filter(c =>
-    c.state === CSTATE.AT_COUNTER ||
-    c.state === CSTATE.QUEUED ||
-    c.state === CSTATE.ENTERING
-  ).length;
-}
-
-/**
- * Check if queue has space for another customer.
- */
-export function hasQueueSpace(customers, maxSize) {
-  return getQueueLength(customers) < maxSize;
+  return QUEUE_SLOTS.length - occupiedSlots.length;
 }

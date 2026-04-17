@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Coffee Shop - Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 20px;
+            background: #1a0a00;
+            color: #f0d9b5;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #8b5e3c;
+        }
+        .pass { background: #2d1b00; color: #5aad5a; }
+        .fail { background: #2d1b00; color: #e04040; }
+    </style>
+</head>
+<body>
+    <h1>Pixel Coffee Shop - JavaScript Test</h1>
+    <div id="results"></div>
+
+    <script type="module">
+        const results = document.getElementById('results');
+
+        async function testModule(moduleName) {
+            try {
+                const module = await import(`./js/${moduleName}.js`);
+                return { name: moduleName, status: 'PASS', error: null };
+            } catch (error) {
+                return { name: moduleName, status: 'FAIL', error: error.message };
+            }
+        }
+
+        const modules = ['constants', 'state', 'customer', 'queue', 'drink', 'ui', 'renderer', 'main'];
+
+        async function runTests() {
+            for (const module of modules) {
+                const result = await testModule(module);
+                const div = document.createElement('div');
+                div.className = `test-result ${result.status === 'PASS' ? 'pass' : 'fail'}`;
+                div.innerHTML = `<strong>${module}.js</strong>: ${result.status}`;
+                if (result.error) {
+                    div.innerHTML += `<br><small>${result.error}</small>`;
+                }
+                results.appendChild(div);
+            }
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

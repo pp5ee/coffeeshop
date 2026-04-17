@@ -178,15 +178,18 @@ export function updateCustomers(customers, dt, patienceBase) {
       c.state === CSTATE.ENTERING
     );
 
-    // Reassign queue indices
-    activeCustomers.forEach((c, i) => {
-      c.queueIndex = i;
+    // Reassign queue indices sequentially
+    for (let i = 0; i < activeCustomers.length; i++) {
+      const customer = activeCustomers[i];
+      customer.queueIndex = i;
+
+      // Update state based on new position
       if (i === 0) {
-        c.state = CSTATE.AT_COUNTER;
+        customer.state = CSTATE.AT_COUNTER;
       } else {
-        c.state = CSTATE.QUEUED;
+        customer.state = CSTATE.QUEUED;
       }
-    });
+    }
 
     // Update the array in place
     customers.length = 0;

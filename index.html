@@ -1,96 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pixel Coffee Shop</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
+  <!-- Game Screens -->
+  <div id="start-screen" class="screen active">
+    <h1>Pixel Coffee Shop</h1>
+    <p>Serve customers quickly and accurately to earn money!</p>
+    <button id="start-btn">Start Day</button>
+  </div>
 
-  <!-- Start Screen Overlay -->
-  <div id="screen-start" class="screen active">
-    <div class="screen-box">
-      <h1 class="title">☕ Pixel Coffee Shop</h1>
-      <p class="subtitle">Serve customers before they lose patience!</p>
-      <ul class="instructions">
-        <li>Select a <strong>cup size</strong></li>
-        <li>Add <strong>espresso shots</strong></li>
-        <li>Choose <strong>milk type</strong></li>
-        <li>Hit <strong>Serve</strong> to deliver the drink</li>
-      </ul>
-      <button id="btn-start-day" class="btn btn-primary">Start Day</button>
+  <div id="game-screen" class="screen">
+    <div id="game-container">
+      <canvas id="game-canvas" width="800" height="600"></canvas>
+      <div id="ui-overlay">
+        <div id="money-counter">$0.00</div>
+        <div id="day-timer">60s</div>
+        <div id="feedback-message"></div>
+
+        <!-- Drink Preparation UI -->
+        <div id="drink-ui">
+          <h3>Prepare Drink</h3>
+          <div class="drink-step">
+            <label>Cup Size:</label>
+            <button data-cup="small">Small</button>
+            <button data-cup="medium">Medium</button>
+            <button data-cup="large">Large</button>
+          </div>
+          <div class="drink-step">
+            <label>Espresso Shots:</label>
+            <button data-shots="1">1 Shot</button>
+            <button data-shots="2">2 Shots</button>
+          </div>
+          <div class="drink-step">
+            <label>Milk:</label>
+            <button data-milk="none">None</button>
+            <button data-milk="steamed">Steamed</button>
+            <button data-milk="foam">Foam</button>
+          </div>
+          <button id="serve-btn">Serve Drink</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- End-of-Day Summary Screen Overlay -->
-  <div id="screen-summary" class="screen hidden">
-    <div class="screen-box">
-      <h2 class="title">End of Day</h2>
-      <div class="summary-stats">
-        <div class="stat-row">
-          <span class="stat-label">Orders Served</span>
-          <span id="stat-served" class="stat-value">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Customers Lost</span>
-          <span id="stat-failed" class="stat-value">0</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Money Earned</span>
-          <span id="stat-money" class="stat-value">$0.00</span>
-        </div>
-      </div>
-      <button id="btn-play-again" class="btn btn-primary">Play Again</button>
+  <div id="summary-screen" class="screen">
+    <h1>End of Day</h1>
+    <div id="stats">
+      <p>Orders Served: <span id="served-count">0</span></p>
+      <p>Money Earned: $<span id="money-earned">0.00</span></p>
     </div>
-  </div>
-
-  <!-- Main Game Wrapper (visible during gameplay) -->
-  <div id="game-wrapper" class="hidden">
-
-    <!-- HUD Bar -->
-    <div id="hud">
-      <span class="hud-item">💰 <span id="hud-money">$0.00</span></span>
-      <span class="hud-item">⏱ <span id="hud-timer">60</span>s</span>
-      <span class="hud-item">✅ <span id="hud-served">0</span> served</span>
-    </div>
-
-    <!-- Game Canvas -->
-    <canvas id="game-canvas" width="800" height="600"></canvas>
-
-    <!-- Drink Preparation Panel -->
-    <div id="drink-panel">
-      <div class="panel-section">
-        <span class="panel-label">Cup Size</span>
-        <div class="btn-group" id="btns-cup">
-          <button class="btn btn-choice" data-value="small">S</button>
-          <button class="btn btn-choice" data-value="medium">M</button>
-          <button class="btn btn-choice" data-value="large">L</button>
-        </div>
-      </div>
-      <div class="panel-section">
-        <span class="panel-label">Espresso</span>
-        <div class="btn-group" id="btns-espresso">
-          <button class="btn btn-choice" data-value="1">1 shot</button>
-          <button class="btn btn-choice" data-value="2">2 shots</button>
-        </div>
-      </div>
-      <div class="panel-section">
-        <span class="panel-label">Milk</span>
-        <div class="btn-group" id="btns-milk">
-          <button class="btn btn-choice" data-value="none">None</button>
-          <button class="btn btn-choice" data-value="steamed">Steamed</button>
-          <button class="btn btn-choice" data-value="foam">Foam</button>
-        </div>
-      </div>
-      <button id="btn-serve" class="btn btn-serve" disabled>Serve ☕</button>
-    </div>
-
-    <!-- Feedback Message Bar -->
-    <div id="feedback-bar">
-      <span id="feedback-msg"></span>
-    </div>
-
+    <button id="play-again-btn">Play Again</button>
   </div>
 
   <script type="module" src="js/main.js"></script>

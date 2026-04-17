@@ -158,31 +158,31 @@ Create a complete browser-based coffee shop management game prototype called "Pi
 <!-- Map each task to its target Acceptance Criterion and routing tag -->
 | Task | Target AC | Status | Tag | Owner | Notes |
 |------|-----------|--------|-----|-------|-------|
-| task1 | AC-1 | pending | coding | claude | Create HTML structure with Canvas and UI containers |
-| task2 | AC-10 | pending | coding | claude | Implement CSS pixel-art styling |
-| task3 | AC-1 | pending | coding | claude | Set up game loop with requestAnimationFrame |
-| task4 | AC-2 | pending | coding | claude | Implement game state machine |
-| task5 | AC-1 | pending | coding | claude | Create start screen UI |
-| task6 | AC-9 | pending | coding | claude | Create end-of-day summary screen |
-| task7 | AC-3 | pending | coding | claude | Implement Customer class |
-| task8 | AC-3 | pending | coding | claude | Implement customer spawning system |
-| task9 | AC-4 | pending | coding | claude | Implement queue position management |
-| task10 | AC-5 | pending | coding | claude | Implement order display and patience timer |
-| task11 | AC-6 | pending | coding | claude | Define drink recipes and validation |
-| task12 | AC-6 | pending | coding | claude | Create drink preparation UI |
-| task13 | AC-7 | pending | coding | claude | Implement serve and validation logic |
-| task14 | AC-7 | pending | coding | claude | Implement money and scoring system |
-| task15 | AC-8 | pending | coding | claude | Create game HUD (money, timer, counters) |
-| task16 | AC-8 | pending | coding | claude | Implement feedback message system |
-| task17 | AC-10 | pending | coding | claude | Create Canvas renderer for scene |
-| task18 | AC-3 | pending | coding | claude | Implement customer animations |
-| task19 | AC-11 | pending | coding | claude | Organize code into modular files |
-| task20 | AC-12 | pending | coding | claude | Write comprehensive README |
 
 ### Completed and Verified
 <!-- Only move tasks here after Codex verification -->
 | AC | Task | Completed Round | Verified Round | Evidence |
 |----|------|-----------------|----------------|----------|
+| AC-1 | Create HTML structure with Canvas and UI containers | Round 0 | Round 0 | index.html created with Canvas and UI containers |
+| AC-1 | Set up game loop with requestAnimationFrame | Round 0 | Round 0 | main.js with game loop implementation |
+| AC-1 | Create start screen UI | Round 0 | Round 0 | Start screen with functional button |
+| AC-2 | Implement game state machine | Round 0 | Round 0 | state.js with state transitions |
+| AC-2 | Create end-of-day summary screen | Round 0 | Round 0 | Summary screen with statistics |
+| AC-3 | Implement Customer class | Round 0 | Round 0 | customer.js with customer behavior |
+| AC-3 | Implement customer spawning system | Round 0 | Round 0 | Customer spawning with timer |
+| AC-3 | Implement customer animations | Round 0 | Round 0 | Animated customer movement |
+| AC-4 | Implement queue position management | Round 0 | Round 0 | queue.js with queue system |
+| AC-5 | Implement order display and patience timer | Round 0 | Round 0 | Order bubbles and patience bars |
+| AC-6 | Define drink recipes and validation | Round 0 | Round 0 | drink.js with recipe system |
+| AC-6 | Create drink preparation UI | Round 0 | Round 0 | Drink preparation interface |
+| AC-7 | Implement serve and validation logic | Round 0 | Round 0 | Drink validation and scoring |
+| AC-7 | Implement money and scoring system | Round 0 | Round 0 | Money tracking and scoring |
+| AC-8 | Create game HUD (money, timer, counters) | Round 0 | Round 0 | HUD with real-time updates |
+| AC-8 | Implement feedback message system | Round 0 | Round 0 | Feedback messages for events |
+| AC-10 | Implement CSS pixel-art styling | Round 0 | Round 0 | style.css with pixel styling |
+| AC-10 | Create Canvas renderer for scene | Round 0 | Round 0 | renderer.js with scene rendering |
+| AC-11 | Organize code into modular files | Round 0 | Round 0 | 8 modular JavaScript files |
+| AC-12 | Write comprehensive README | Round 0 | Round 0 | README.md with full documentation |
 
 ### Explicitly Deferred
 <!-- Items here require strong justification -->
