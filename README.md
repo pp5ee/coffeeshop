@@ -1,206 +1,187 @@
-# ☕ Pixel Coffee Shop
+# Pixel Coffee Shop
 
-A complete browser-based coffee shop management game prototype built with HTML5 Canvas, CSS, and vanilla JavaScript. Features pixel-art visual style, customer queue management, multi-step drink preparation, and real-time gameplay.
+A charming browser-based coffee shop management game built with HTML5 Canvas, CSS, and vanilla JavaScript. Experience the pixel-art aesthetic as you serve customers, prepare drinks, and manage your coffee shop!
 
-## 🎮 Game Overview
+## Features
 
-Pixel Coffee Shop is a time-management game where you run a coffee shop. Customers enter, queue for service, place drink orders, and react based on your service speed and accuracy. Prepare drinks through a multi-step interface while managing multiple customers with patience timers.
+- **Pixel-Art Visual Style**: Authentic pixel-art rendering with crisp, non-aliased graphics
+- **Customer Management**: Customers enter, queue, order drinks, and react to your service
+- **Multi-Step Drink Preparation**: Select cup size → add espresso shots → choose milk type → serve
+- **Real-Time Gameplay**: Manage multiple customers simultaneously with patience timers
+- **Scoring System**: Earn money for correct orders, lose customers for mistakes or delays
+- **Complete Game Flow**: Start screen → active gameplay → end-of-day summary → replay
 
-### Game Features
+## Prerequisites
 
-- **Pixel-art aesthetic** with smooth animations
-- **Customer queue system** with realistic movement and patience timers
-- **Multi-step drink preparation** (cup → espresso → milk → serve)
-- **Drink validation** with scoring and money system
-- **Day timer** with end-of-day summary statistics
-- **Responsive UI** with real-time feedback messages
+- Modern web browser (Chrome 80+, Firefox 75+, Safari 13+, Edge 80+)
+- JavaScript enabled
+- Local web server (for ES6 module support)
 
-## 🚀 Prerequisites
+## How to Run
 
-- Modern web browser (Chrome, Firefox, Safari, or Edge)
-- Local web server (required for ES6 module loading)
-
-## 📥 Installation & Setup
-
-### Option 1: Python Simple HTTP Server
-
+### Option 1: Using Python (Recommended)
 ```bash
-# Navigate to project directory
+# Navigate to the project directory
 cd pixel-coffee-shop
 
-# Start local server (Python 3)
-python -m http.server 8000
+# Start local server
+python3 -m http.server 8000
 
 # Open browser to http://localhost:8000
 ```
 
-### Option 2: Node.js Serve
-
+### Option 2: Using Node.js (if you have it installed)
 ```bash
 # Install serve globally (if not already installed)
 npm install -g serve
 
-# Serve the project
+# Start server
 serve -s . -p 8000
 
 # Open browser to http://localhost:8000
 ```
 
-### Option 3: Live Server (VS Code Extension)
+### Option 3: Direct File Access (Limited Functionality)
+```bash
+# Open index.html directly in browser
+# Note: Some features may not work due to CORS restrictions with ES6 modules
+open index.html
+```
 
-1. Install the "Live Server" extension in VS Code
-2. Right-click `index.html` and select "Open with Live Server"
-3. Browser will open automatically
+## Game Controls
 
-## 🎯 How to Play
+### Drink Preparation Sequence
+1. **Select Cup Size**: Small, Medium, or Large
+2. **Add Espresso Shots**: 1 or 2 shots
+3. **Choose Milk Type**: None, Steamed, or Foam
+4. **Serve**: Deliver the completed drink
 
-1. **Start the Day**: Click "Start Day" on the welcome screen
-2. **Serve Customers**:
-   - Customers enter from the door and queue at the counter
-   - Each customer displays their drink order and patience timer
-   - Prepare drinks using the three-step process:
-     - Select cup size (Small/Medium/Large)
-     - Add espresso shots (1 or 2)
-     - Choose milk type (None/Steamed/Foam)
-   - Click "Serve" when drink is complete
-3. **Earn Money**:
-   - Correct drinks earn base price + tip
-   - Wrong drinks or timeouts result in unhappy customers
-4. **End of Day**: Game ends when timer reaches zero
-5. **Play Again**: Review statistics and start a new day
+### Game Mechanics
+- **Customers**: Appear at the door and walk to queue positions
+- **Patience Timer**: Each customer has a decreasing patience bar (green → yellow → red)
+- **Order Matching**: Serve the correct drink to earn money and tips
+- **Time Management**: Serve customers before their patience runs out
+- **Day Timer**: Each day lasts for a set duration (adjustable in settings)
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 pixel-coffee-shop/
-├── index.html          # Main HTML file with game structure
+├── index.html              # Main HTML file
 ├── css/
-│   └── style.css       # Pixel-art styling and UI layout
+│   └── game.css            # Pixel-art styling and layout
 ├── js/
-│   ├── main.js         # Game loop orchestration and initialization
-│   ├── state.js        # Game state management and transitions
-│   ├── customer.js     # Customer class and queue system
-│   ├── queue.js        # Queue position management
-│   ├── drink.js        # Drink preparation and validation
-│   ├── ui.js           # UI interactions and feedback
-│   ├── renderer.js     # Canvas rendering functions
-│   └── constants.js    # Game configuration and constants
-└── README.md           # This file
+│   ├── main.js             # Game loop and orchestration
+│   ├── state.js            # Game state management
+│   ├── customer.js         # Customer class and queue management
+│   ├── queue.js            # Queue position system
+│   ├── drink.js            # Drink recipes and validation
+│   ├── ui.js               # UI interactions and feedback
+│   ├── renderer.js         # Canvas rendering functions
+│   └── constants.js        # Game configuration and constants
+└── README.md               # This file
 ```
 
-## 🔧 Technical Architecture
+## Technical Implementation
 
-### Core Systems
+### Architecture
+- **Modular ES6**: Clean separation of concerns with import/export modules
+- **Canvas Rendering**: Pixel-perfect graphics with `imageSmoothingEnabled = false`
+- **State Machine**: Clear game state transitions (start → playing → summary)
+- **Event-Driven**: Button interactions and game events handled through listeners
 
-- **Game Loop**: `requestAnimationFrame`-based loop with update/render phases
-- **State Machine**: Start → Playing → End-of-Day transitions
-- **Customer System**: Spawning, movement, queue management, patience timers
-- **Drink System**: Multi-step preparation with validation logic
-- **UI System**: HUD updates, feedback messages, button interactions
-- **Renderer**: Canvas-based pixel-art rendering
+### Key Systems
+- **Game Loop**: `requestAnimationFrame` for smooth 60fps updates
+- **Customer System**: Spawning, movement, queue management, and state transitions
+- **Drink System**: Recipe validation, step-by-step preparation, and scoring
+- **UI System**: Real-time HUD updates, feedback messages, and screen transitions
+- **Rendering System**: Pixel-art drawing with proper scaling and anti-aliasing disabled
 
-### Module Dependencies
+## Customization
 
-```
-main.js (orchestrator)
-├── state.js (game state)
-├── customer.js (customers & queue)
-├── drink.js (drink preparation)
-├── ui.js (UI interactions)
-├── renderer.js (canvas drawing)
-└── constants.js (configuration)
-```
+### Game Constants
+Modify `js/constants.js` to adjust:
+- Day duration and difficulty scaling
+- Customer spawn rates and patience levels
+- Drink prices and recipe definitions
+- Visual colors and scene layout
+- Queue positions and movement speeds
 
-## 🎨 Visual Design
+### Visual Style
+Customize `css/game.css` for:
+- Color schemes and pixel-art aesthetics
+- Font choices and text rendering
+- Layout dimensions and responsive design
 
-### Pixel Art Aesthetic
-- Canvas rendering with `imageSmoothingEnabled: false`
-- CSS `image-rendering: pixelated` for crisp scaling
-- Limited color palette with consistent pixel dimensions
-- Geometric shapes and block-based character design
+## Browser Compatibility
 
-### Color Scheme
-- Warm coffee shop tones (browns, creams, wood colors)
-- High contrast for readability
-- Color-coded patience bars (green → yellow → red)
+| Browser | Version | Status | Notes |
+|---------|---------|--------|-------|
+| Chrome  | 80+     | ✅ Full | Best performance |
+| Firefox | 75+     | ✅ Full | Excellent support |
+| Safari  | 13+     | ✅ Full | Good performance |
+| Edge    | 80+     | ✅ Full | Chromium-based |
+| IE      | Any     | ❌ None | No ES6 module support |
 
-## 🎮 Game Mechanics
+## Development
 
-### Customer Behavior
-- **Spawning**: Random intervals based on day configuration
-- **Movement**: Smooth walking animation to queue positions
-- **Patience**: Timer decreases while waiting at counter
-- **States**: Entering → Queued → At Counter → Served/Angry → Gone
+### Adding New Features
+1. Follow the modular architecture pattern
+2. Add new constants to `constants.js`
+3. Implement functionality in dedicated module files
+4. Update UI interactions in `ui.js`
+5. Add rendering support in `renderer.js`
+6. Test thoroughly across different browsers
 
-### Drink Preparation
-- **Step 1**: Cup Size (Small/Medium/Large)
-- **Step 2**: Espresso Shots (1 or 2)
-- **Step 3**: Milk Type (None/Steamed/Foam)
-- **Serve**: Validate against customer order
+### Code Style Guidelines
+- Use descriptive, domain-appropriate naming
+- Keep functions focused and under 50 lines
+- Document complex logic with clear comments
+- Follow existing patterns for consistency
+- Test all state transitions and edge cases
 
-### Scoring System
-- **Base Price**: Varies by drink complexity
-- **Perfect Tip**: Bonus for exact order match
-- **No Payment**: Wrong drinks or timeouts
-
-## 🔧 Configuration
-
-Game balance and settings are centralized in `js/constants.js`:
-
-- **Day Configurations**: Timer duration, max customers, spawn rates
-- **Drink Recipes**: Name, ingredients, pricing
-- **Visual Layout**: Canvas dimensions, scene coordinates
-- **Game Balance**: Patience timers, walking speeds, scoring
-
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-**"Failed to load module" error**
-- Ensure you're using a local web server, not opening HTML file directly
-
-**Canvas rendering issues**
+**Game won't start**
+- Ensure you're using a local web server, not opening the file directly
 - Check browser console for JavaScript errors
-- Verify browser supports HTML5 Canvas
+- Verify all module files are present and accessible
 
-**Game not starting**
-- Check that all JavaScript files are loading correctly
-- Verify ES6 module support in browser
+**Graphics look blurry**
+- Browser may be applying anti-aliasing
+- Ensure `imageSmoothingEnabled = false` is set
+- Check CSS `image-rendering: pixelated` is applied
 
-### Browser Compatibility
+**Customers not moving**
+- Check game loop is running (FPS counter should show activity)
+- Verify customer state transitions are working
+- Check queue position assignments
 
-- ✅ Chrome 61+ (recommended)
-- ✅ Firefox 60+
-- ✅ Safari 11+
-- ✅ Edge 79+
+### Debug Mode
+Add `?debug=true` to the URL to enable:
+- Console logging of game events
+- Visual debug overlays
+- Performance metrics display
 
-## 🚀 Development
+## License
 
-### Adding New Features
+This project is open source and available under the MIT License.
 
-1. **New Drink Recipes**: Add to `DRINK_RECIPES` in `constants.js`
-2. **UI Elements**: Modify `index.html` and corresponding CSS/JS
-3. **Game Mechanics**: Extend existing systems in modular files
-4. **Visual Elements**: Add rendering functions in `renderer.js`
+## Contributing
 
-### Code Style
-- ES6 modules with clear imports/exports
-- Modular organization by system responsibility
-- Immutable configuration in `constants.js`
-- Consistent naming conventions
+Contributions are welcome! Please follow these guidelines:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly across browsers
+5. Submit a pull request
 
-## 📄 License
+## Acknowledgments
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
-
-## 🎉 Credits
-
-Built with vanilla JavaScript, HTML5 Canvas, and CSS. No external frameworks or libraries used.
+Built with vanilla JavaScript, HTML5 Canvas, and CSS. No external frameworks or libraries used to maintain the lightweight, dependency-free experience.
 
 ---
 
-**Enjoy running your Pixel Coffee Shop! ☕**
+**Enjoy brewing!** ☕

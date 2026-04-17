@@ -32,6 +32,12 @@
 @font-face {
   font-family: 'PixelFont';
   src: local('Courier New'), local('Courier'), monospace;
+}
+
+/* Proper pixel font stack for pixel-art aesthetic */
+@font-face {
+  font-family: 'PixelArt';
+  src: local('Press Start 2P'), local('Courier New'), local('Courier'), monospace;
   font-size-adjust: 0.5;
 }
 
@@ -41,7 +47,7 @@ html, body {
   height: 100%;
   background: var(--col-bg);
   color: var(--col-text);
-  font-family: 'PixelFont', "Courier New", Courier, monospace;
+  font-family: 'PixelArt', 'Press Start 2P', 'Courier New', Courier, monospace;
   font-size: 14px;
   line-height: 1.4;
   overflow: hidden;

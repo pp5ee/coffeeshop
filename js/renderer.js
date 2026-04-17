@@ -126,10 +126,14 @@ function drawCustomer(customer) {
   const bodyX = x - bodyW / 2;
   const bodyY = y - bodyH;
 
-  // Walking bob animation
-  const bobOffset = state === CSTATE.ENTERING || state === CSTATE.QUEUED
-    ? Math.sin(walkFrame) * 3
-    : 0;
+  // Walking bob animation and leg frame
+  let bobOffset = 0;
+  let legFrame = 0;
+
+  if (state === CSTATE.ENTERING || state === CSTATE.QUEUED) {
+    bobOffset = Math.sin(walkFrame) * 3;
+    legFrame = Math.floor(walkFrame * 2) % 4; // 4-frame walking cycle
+  }
 
   // Body
   ctx.fillStyle = color;
@@ -140,21 +144,54 @@ function drawCustomer(customer) {
   ctx.fillStyle = COLORS.CUSTOMER_SKIN;
   ctx.fillRect(x - headSize / 2, bodyY - headSize + bobOffset + 5, headSize, headSize);
 
-  // Eyes (simple)
+  // Eyes (pixel-art style)
   ctx.fillStyle = '#000';
   if (state === CSTATE.ANGRY) {
-    // Angry eyes (slanted)
+    // Angry eyes (slanted pixels)
     ctx.fillRect(x - 6, bodyY - headSize + bobOffset + 10, 3, 3);
     ctx.fillRect(x + 3, bodyY - headSize + bobOffset + 10, 3, 3);
+  } else if (state === CSTATE.SERVED) {
+    // Happy eyes (closed/smiling)
+    ctx.fillRect(x - 6, bodyY - headSize + bobOffset + 10, 3, 1);
+    ctx.fillRect(x + 3, bodyY - headSize + bobOffset + 10, 3, 1);
   } else {
-    // Normal eyes
-    ctx.fillRect(x - 5, bodyY - headSize + bobOffset + 10, 3, 3);
-    ctx.fillRect(x + 2, bodyY - headSize + bobOffset + 10, 3, 3);
+    // Normal eyes (pixel dots)
+    ctx.fillRect(x - 6, bodyY - headSize + bobOffset + 10, 2, 2);
+    ctx.fillRect(x + 4, bodyY - headSize + bobOffset + 10, 2, 2);
+  }
+
+  // Walking legs animation (pixel-art style)
+  if (state === CSTATE.ENTERING || state === CSTATE.QUEUED) {
+    drawWalkingLegs(x, bodyY + bodyH + bobOffset, legFrame);
   }
 
   // Order bubble (only at counter)
   if (state === CSTATE.AT_COUNTER && order) {
     drawOrderBubble(x, bodyY - headSize - 30 + bobOffset, order, patience, maxPatience);
+  }
+}
+
+function drawWalkingLegs(x, y, frame) {
+  // Draw pixel-art walking legs based on frame
+  ctx.fillStyle = '#000';
+
+  switch (frame) {
+    case 0: // Frame 1: legs together
+      ctx.fillRect(x - 6, y - 10, 3, 10);
+      ctx.fillRect(x + 3, y - 10, 3, 10);
+      break;
+    case 1: // Frame 2: left leg forward
+      ctx.fillRect(x - 8, y - 12, 3, 12);
+      ctx.fillRect(x + 1, y - 8, 3, 8);
+      break;
+    case 2: // Frame 3: legs together
+      ctx.fillRect(x - 6, y - 10, 3, 10);
+      ctx.fillRect(x + 3, y - 10, 3, 10);
+      break;
+    case 3: // Frame 4: right leg forward
+      ctx.fillRect(x - 1, y - 12, 3, 12);
+      ctx.fillRect(x - 6, y - 8, 3, 8);
+      break;
   }
 }
 

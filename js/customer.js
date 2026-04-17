@@ -83,8 +83,10 @@ export class Customer {
     const slot = this.getQueueSlot(this.queueIndex);
     this.moveToward(slot.x, slot.y, dt);
 
-    if (this.hasReachedTarget() && this.queueIndex === 0) {
-      this.state = CSTATE.AT_COUNTER;
+    if (this.hasReachedTarget()) {
+      if (this.queueIndex === 0) {
+        this.state = CSTATE.AT_COUNTER;
+      }
     }
   }
 
