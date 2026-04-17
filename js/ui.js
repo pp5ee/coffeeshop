@@ -7,7 +7,8 @@
 import { gameState, recordServed, recordFailed } from './state.js';
 import { setCupSize, setShots, setMilk, resetDrink, tryServe } from './drink.js';
 import { getCustomerAtCounter } from './customer.js';
-import { SCREEN_PLAYING, CSTATE } from './constants.js';
+import { SCREEN_PLAYING } from './state.js';
+import { CSTATE } from './constants.js';
 
 // ── DOM Elements ───────────────────────────────────────────────────────────────
 let hudMoney, hudTimer, hudServed;
@@ -38,13 +39,26 @@ export function initUI() {
   setupDrinkButtons();
 }
 
+function setGroupDisabled(buttons, disabled) {
+  buttons.forEach(btn => {
+    btn.disabled = disabled;
+  });
+}
+
 function setupDrinkButtons() {
+  // Enforce Cup → Espresso → Milk sequence:
+  // Initially only Cup is enabled; subsequent groups unlock on prior selection.
+  setGroupDisabled(espressoButtons, true);
+  setGroupDisabled(milkButtons, true);
+
   // Cup size buttons
   cupButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const size = btn.dataset.value;
       setCupSize(size);
       updateButtonSelection(cupButtons, size);
+      // Unlock espresso once a cup is chosen
+      setGroupDisabled(espressoButtons, false);
     });
   });
 
@@ -54,6 +68,8 @@ function setupDrinkButtons() {
       const shots = parseInt(btn.dataset.value, 10);
       setShots(shots);
       updateButtonSelection(espressoButtons, btn.dataset.value);
+      // Unlock milk once espresso shots are chosen
+      setGroupDisabled(milkButtons, false);
     });
   });
 
@@ -99,6 +115,9 @@ function clearDrinkSelection() {
     btn.classList.remove('selected');
     btn.setAttribute('aria-pressed', 'false');
   });
+  // Re-enforce step sequence: disable Espresso and Milk until Cup is chosen again
+  setGroupDisabled(espressoButtons, true);
+  setGroupDisabled(milkButtons, true);
 }
 
 // ── HUD Updates ────────────────────────────────────────────────────────────────
